@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffd1dc 0%, #ffb6c1 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        .corner-photo {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #d63384;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+
+        .corner-photo.top-left {
+            top: -20px;
+            left: -20px;
+        }
+
+        .corner-photo.top-right {
+            top: -20px;
+            right: -20px;
+        }
+
+        .corner-photo.bottom-left {
+            bottom: -20px;
+            left: -20px;
+        }
+
+        .corner-photo.bottom-right {
+            bottom: -20px;
+            right: -20px;
+        }
+
+        .corner-photo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h1 {
+            color: #d63384;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: #000;
+        }
+
+        .carousel-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .carousel-image.active {
+            opacity: 1;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yesBtn {
+            background: #d63384;
+            color: white;
+        }
+
+        #yesBtn:hover {
+            background: #c02068;
+            transform: scale(1.05);
+        }
+
+        #noBtn {
+            background: #6c757d;
+            color: white;
+        }
+
+        #noBtn:hover {
+            background: #5a6268;
+        }
+
+        .letter-container {
+            display: none;
+            margin-top: 30px;
+            perspective: 1000px;
+        }
+
+        .letter-container.show {
+            display: block;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .letter {
+            background: #fff8dc;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: unfold 0.8s ease-out;
+        }
+
+        .letter::before {
+            content: '💌';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 3em;
+        }
+
+        .letter p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.8;
+            font-style: italic;
+            text-align: left;
+        }
+
+        .letter .signature {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 1.2em;
+            color: #d63384;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes unfold {
+            0% {
+                transform: rotateX(-90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            background: #d63384;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .side-confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #ff69b4;
+            z-index: 999;
+            animation: side-confetti-fall linear infinite;
+        }
+
+        @keyframes side-confetti-fall {
+            0% {
+                top: -10px;
+                opacity: 1;
+            }
+            100% {
+                top: 110vh;
+                opacity: 0.3;
+            }
+        }
+
+        .side-confetti.left {
+            left: 5%;
+        }
+
+        .side-confetti.right {
+            right: 5%;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music - Add your music file here -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="background-music.m4a" type="audio/mp4">
+        <source src="background-music.m4a" type="audio/x-m4a">
+        <source src="background-music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <!-- Corner decorative photos -->
+        <div class="corner-photo top-left" id="cornerTopLeft">💕</div>
+        <div class="corner-photo top-right" id="cornerTopRight">💖</div>
+        <div class="corner-photo bottom-left" id="cornerBottomLeft">💗</div>
+        <div class="corner-photo bottom-right" id="cornerBottomRight">💝</div>
+
+        <h1>Will You Be My Valentine? 💕</h1>
+        
+        <div class="carousel" id="carousel">
+            <!-- Placeholder - users will replace with their own images -->
+            <div class="placeholder-image">
+                Add your photos here!<br>
+                (Replace the image URLs in the JavaScript section)
+            </div>
+        </div>
+
+        <div id="questionSection">
+            <div class="buttons">
+                <button id="yesBtn">Yes! 💖</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div class="letter-container" id="letterContainer">
+            <div class="letter">
+                <p>
+                    Dear Hailey,
+                    <br><br>
+                    From the moment I met you, my life has been filled with some of the best moments.
+                    Even right now, while you are halfway across the world you are the person I miss the most.
+                    <br><br>
+                    I can’t wait for you to comeback so we can spend our time together. After going back to my old apartment.
+                    I was hit with all the memories of us skipping class, getting matcha, and studying together in the 
+                    science library. I can’t wait to be able to go on some fun adventures with you again. Let’s go get daydrift 
+                    and eat something tasty, for valentines day hopefully :L
+                    <br><br>
+                    What I am trying to ask you on a day you get back is
+                    Will you be my valentine? Pretty please!!
+                </p>
+                <div class="signature">
+                    With all my love,<br>
+                    Steven Lee :L 💕
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Background Music
+        const bgMusic = document.getElementById('bgMusic');
+        
+        // Try to play music automatically (some browsers may block this)
+        // User interaction may be required on some browsers
+        window.addEventListener('load', () => {
+            bgMusic.play().catch(error => {
+                console.log('Autoplay prevented. Music will start on user interaction.');
+                // Add click listener to start music on first interaction
+                document.body.addEventListener('click', () => {
+                    bgMusic.play();
+                }, { once: true });
+            });
+        });
+
+        // Create continuous side confetti
+        function createSideConfetti() {
+            const colors = ['#d63384', '#ff69b4', '#ff1493', '#ffc0cb', '#ff6b9d', '#ffb6c1'];
+            
+            // Left side confetti
+            setInterval(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'side-confetti left';
+                confetti.style.left = Math.random() * 15 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 8 + 4) + 'px';
+                confetti.style.height = (Math.random() * 8 + 4) + 'px';
+                confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 6000);
+            }, 300);
+            
+            // Right side confetti
+            setInterval(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'side-confetti right';
+                confetti.style.right = Math.random() * 15 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 8 + 4) + 'px';
+                confetti.style.height = (Math.random() * 8 + 4) + 'px';
+                confetti.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 6000);
+            }, 300);
+        }
+
+        // Start side confetti when page loads
+        window.addEventListener('load', createSideConfetti);
+
+        // CUSTOMIZE YOUR PHOTOS HERE
+        // Place your photos in the same folder as this HTML file
+        // Then just use the filename (e.g., 'photo1.jpg', 'photo2.png')
+        const photos = [
+            'photos/Boston.JPG',
+            'photos/Picnic.JPEG',
+            'photos/Pillar.JPEG',
+            'photos/Plane.JPG'
+        ];
+
+        // CUSTOMIZE CORNER PHOTOS HERE
+        // Add filenames for cute decorative photos in the corners
+        // These should also be in the same folder as this HTML file
+        const cornerPhotos = {
+            topLeft: 'photos/Val_image1.jpeg', // Example: 'cute-cat.jpg'
+            topRight: 'photos/Hailey.JPG', // Example: 'heart.png'
+            bottomLeft: 'photos/Steven.JPG', // Example: 'flowers.jpg'
+            bottomRight: 'photos/Val_image2.jpeg' // Example: 'us-selfie.jpg'
+        };
+
+        // Set corner photos
+        function setCornerPhotos() {
+            const corners = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'];
+            corners.forEach(corner => {
+                const element = document.getElementById('corner' + corner.charAt(0).toUpperCase() + corner.slice(1));
+                if (cornerPhotos[corner]) {
+                    const img = document.createElement('img');
+                    img.src = cornerPhotos[corner];
+                    element.innerHTML = '';
+                    element.appendChild(img);
+                }
+            });
+        }
+
+        setCornerPhotos();
+
+        // Carousel functionality
+        const carousel = document.getElementById('carousel');
+        let currentIndex = 0;
+
+        if (photos.length > 0) {
+            // Clear placeholder
+            carousel.innerHTML = '';
+            
+            // Create image elements
+            photos.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.className = 'carousel-image';
+                if (index === 0) {
+                    img.classList.add('active');
+                }
+                carousel.appendChild(img);
+            });
+
+            // Rotate images
+            setInterval(() => {
+                const images = document.querySelectorAll('.carousel-image');
+                images[currentIndex].classList.remove('active');
+                
+                currentIndex = (currentIndex + 1) % photos.length;
+                
+                images[currentIndex].classList.add('active');
+            }, 3000); // Change image every 3 seconds
+        }
+
+        // Button functionality
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionSection = document.getElementById('questionSection');
+        const letterContainer = document.getElementById('letterContainer');
+
+        let yesBtnScale = 1;
+
+        noBtn.addEventListener('click', () => {
+            yesBtnScale += 0.3;
+            yesBtn.style.transform = `scale(${yesBtnScale})`;
+            
+            // Shrink no button
+            const currentNoScale = parseFloat(noBtn.style.transform.replace('scale(', '').replace(')', '')) || 1;
+            noBtn.style.transform = `scale(${Math.max(0.3, currentNoScale - 0.2)})`;
+        });
+
+        yesBtn.addEventListener('click', () => {
+            // Create confetti
+            createConfetti();
+            
+            // Hide question section and show letter
+            setTimeout(() => {
+                questionSection.classList.add('hidden');
+                letterContainer.classList.add('show');
+            }, 1000);
+        });
+
+        function createConfetti() {
+            const colors = ['#d63384', '#ff69b4', '#ff1493', '#ffc0cb', '#ff6b9d'];
+            const confettiCount = 150;
+
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 10);
+            }
+        }
+    </script>
+</body>
+</html>
